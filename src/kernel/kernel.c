@@ -24,6 +24,15 @@ u32 rdtsc(void) {
 	  return x;
 }
 
+unsigned int strlen(char *str)
+{
+    unsigned int n = 0;
+
+    while (str[n++]);
+
+    return n;
+}
+
 void *memcpy(void *dst, const void *src, int size)
 {
 	void *p = dst;
@@ -33,12 +42,32 @@ void *memcpy(void *dst, const void *src, int size)
 
 	return p;
 }
+#define strcpy(x,y) memcpy((void *)(x), (void *)(y), (strlen(x) + 1))
+
+void itoa(char *str, unsigned long num)
+{
+	char digits[] = "0123456789";
+	char buf[30], *ptr;
+
+	ptr = buf + sizeof(buf) - 1;
+	*ptr-- = '\0';
+
+	do {
+        	*ptr-- = digits[num % 10];
+	        num = num / 10;
+	} while (num > 0);
+
+	strcpy(str, ++ptr);
+}
 
 void init_kernel()
 {
-	char* terminal_buffer = (char*) 0xB8000;
-	char* terminal_color = (char*) 0xB8001;
-	char hello[] = "HELLO WORLD";
+	char hello[] = "HELLO WORLD, timestamp is: ";
+	char time[30];
 
-	terminal_print_string(hello, 0, 1);
+	while(1) {
+		itoa(&time, rdtsc());
+		terminal_print_string(hello, 0, 1);
+		terminal_print_string(time, strlen(hello), 1);
+	}
 }
