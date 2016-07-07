@@ -91,7 +91,7 @@ loadkernel:	; kernel is placed to 2nd sector load it to h7E00
 	mov es, ax
 	mov bx, 0x0000 ; offset add => 0x7E00
 	mov ah, 02	; BIOS read sector function
-	mov al, 01	; read one sector
+	mov al, 02	; read one sector
 	mov ch,	00	; Track to read
 	mov cl,	02	; Sector to read
 	mov dh,	00	; Head to read
